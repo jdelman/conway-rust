@@ -211,8 +211,8 @@ fn main() {
   let mut width: usize = 32;
 
   if (args.len() == 3) {
-    height = args[1].parse::<usize>().unwrap();
-    width = args[2].parse::<usize>().unwrap();
+    width = args[1].parse::<usize>().unwrap();
+    height = args[2].parse::<usize>().unwrap();
   }
   else if (args.len() > 1) {
     panic!("{:?}", "please provide 2 dimensions or no arguments");
