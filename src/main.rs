@@ -47,8 +47,7 @@ impl Grid {
     let mut required_segments = dimensions.area() / 8 / SEGMENT_SIZE;
 
     // if the area isn't a power of 2, add one, since integer devision will round down 
-    let pow = (required_segments as f64).log2();
-    if pow != pow.floor() {
+    if !required_segments.is_power_of_two() {
       required_segments += 1;
     }
 
