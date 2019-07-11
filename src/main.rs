@@ -2,6 +2,7 @@ use std::env;
 use std::mem::size_of;
 use rand::Rng;
 use std::time::Instant;
+use std::fmt;
 
 const SEGMENT_SIZE: usize = size_of::<usize>();
 
@@ -124,8 +125,29 @@ impl Grid {
     return neighbors;
   }
 
-  fn grid_as_str(&self) -> String {
+  fn print_indexes(&self) {
+    let mut gstr = String::new();
+
+    for i in 0..self.dimensions.area() {
+      if i > 0 && i % self.dimensions.width == 0 {
+        gstr += "\n";
+      }
+
+      let digit_str = format!("{: >5} ", i);
+      gstr += &digit_str;
+    }
+
+    println!("{}", gstr);
+  }
+      }
+    }
+
+  }
+
+impl fmt::Display for Grid {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     // total size is equal to dimensions plus a new line for each line
+
     let string_size = (self.dimensions.width + 1) * self.dimensions.height;
     let mut gstr = String::with_capacity(string_size);
 
@@ -140,22 +162,7 @@ impl Grid {
       }
     }
 
-    return gstr;
-  }
-
-  fn print_indexes(&self) {
-    let mut gstr = String::new();
-
-    for i in 0..self.dimensions.area() {
-      if i > 0 && i % self.dimensions.width == 0 {
-        gstr += "\n";
-      }
-
-      let digit_str = format!("{: >5} ", i);
-      gstr += &digit_str;
-    }
-
-    println!("{}", gstr);
+    write!(f, "{}", gstr)
   }
 }
 
@@ -237,7 +244,7 @@ fn main() {
   loop {
     let elapsed = t0.elapsed().as_millis();
     let steps_per_sec = game.steps as f64 / (elapsed as f64 / 1000.);
-    println!("{}", game.grid.grid_as_str());
+    println!("{}", game.grid);
     println!("steps: {}; elapsed: {}ms, steps/sec: {}", game.steps, elapsed, steps_per_sec);
     game.step();
   }
