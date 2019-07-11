@@ -3,6 +3,9 @@ use std::mem::size_of;
 use rand::Rng;
 use std::time::Instant;
 use std::fmt;
+use base64;
+
+mod octets;
 
 const SEGMENT_SIZE: usize = size_of::<usize>();
 
@@ -139,7 +142,32 @@ impl Grid {
 
     println!("{}", gstr);
   }
-      }
+
+  fn to_base64(&self) -> String {
+    // we have to break up usize integers
+    // into u8s should be 8 ints
+    let count = (self.dimensions.area() * SEGMENT_SIZE) + 2;
+    let mut ints: Vec<u8> = Vec::with_capacity(count);
+
+    // first two values should be the dimensions
+    ints.append(&mut (octets::to_octets(self.dimensions.width)));
+    ints.append(&mut (octets::to_octets(self.dimensions.height)));
+
+    // now grid values
+    for index in 0..self.grid.len() {
+      let value = self.grid[index];
+      println!("value: {}", value);
+      let mut octets = octets::to_octets(value);
+      ints.append(&mut octets);
+    }
+
+    println!("octets: {:?}", ints);
+
+    let str_out = base64::encode_config(&ints, base64::STANDARD);
+
+    str_out
+  }
+
     }
 
   }
