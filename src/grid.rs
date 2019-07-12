@@ -1,7 +1,8 @@
-use rand::Rng;
-use base64;
 use std::fmt;
 use std::mem::size_of;
+
+use base64;
+use rand::Rng;
 
 use crate::octets as octets;
 
@@ -178,13 +179,15 @@ impl Grid {
 
     // we pushed onto the array in order, from least
     // to most significant bits for each usize
-    let iters = (octets.len() - 2) / SEGMENT_SIZE;
+    let iters = ((octets.len() - 2) / SEGMENT_SIZE) - 1;
     let mut index = 0;
     for i in 0..iters {
       // build up an array of SEGMENT_SIZE (8) octets
-      let start = (i * SEGMENT_SIZE) + (i + 2);
-      let end = (i * SEGMENT_SIZE) + (i + 2) + SEGMENT_SIZE;
-      let value = octets::from_octets(&octets[start..end]);
+      let start = (2 * SEGMENT_SIZE) + (i * SEGMENT_SIZE);
+      let end = (2 * SEGMENT_SIZE) + (i * SEGMENT_SIZE) + SEGMENT_SIZE;
+      let slice = &octets[start..end];
+
+      let value = octets::from_octets(&slice);
       new_grid.grid[index] = value;
       index += 1;
     }
@@ -196,7 +199,6 @@ impl Grid {
 impl fmt::Display for Grid {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     // total size is equal to dimensions plus a new line for each line
-
     let string_size = (self.dimensions.width + 1) * self.dimensions.height;
     let mut gstr = String::with_capacity(string_size);
 
