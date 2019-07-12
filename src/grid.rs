@@ -53,7 +53,7 @@ impl Grid {
       required_segments += 1;
     }
 
-    return vec![0; required_segments];
+    vec![0; required_segments]
   }
 
   pub fn randomize_grid(&mut self) {
@@ -83,7 +83,7 @@ impl Grid {
   pub fn get_value(&self, index: usize) -> bool {
     let segment = index / (8 * SEGMENT_SIZE);
     let offset = index % (8 * SEGMENT_SIZE);
-    return self.grid[segment] & (1 << offset) != 0;
+    self.grid[segment] & (1 << offset) != 0
   }
 
   fn is_left_wall(&self, index: usize) -> bool {
@@ -123,7 +123,7 @@ impl Grid {
       }
     }
 
-    return neighbors;
+    neighbors
   }
 
   pub fn print_indexes(&self) {
