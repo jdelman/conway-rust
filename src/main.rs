@@ -2,6 +2,11 @@ use std::env;
 use std::sync::mpsc;
 use std::time::Instant;
 use std::thread;
+use std::fs;
+
+#[macro_use]
+extern crate clap;
+use clap::App;
 
 mod grid;
 mod conway;
@@ -11,42 +16,45 @@ use grid::{Grid, GridSize};
 use conway::{Conway};
 
 fn main() {
-  // try to pull dimensions from command line
-  let args: Vec<String> = env::args().collect();
+  let yaml = load_yaml!("cli.yaml");
+  let matches = App::from_yaml(yaml).get_matches();
 
-  let mut height: usize = 32;
-  let mut width: usize = 32;
+  let height = matches.value_of("height")
+    .map_or(32, |val| val.parse::<usize>().unwrap());
+  let width = matches.value_of("width")
+    .map_or(32, |val| val.parse::<usize>().unwrap());
+  let file = matches.value_of("file").unwrap_or("");
+  let max_steps = matches.value_of("steps")
+    .map_or(0, |val| val.parse::<usize>().unwrap());
 
-  if (args.len() == 3) {
-    width = args[1].parse::<usize>().unwrap();
-    height = args[2].parse::<usize>().unwrap();
-  }
-  else if (args.len() > 1) {
-    panic!("{:?}", "please provide 2 dimensions or no arguments");
-  }
-
-  let dimensions = grid::GridSize {
+  let dimensions = GridSize {
     height,
     width
   };
 
-  let mut grid = grid::Grid::with_dimensions(dimensions);
-
-  // debug - get all neighbors
-  // for i in 0..grid.dimensions.area() {
-  //   println!("for index={}, left_wall={}, right_wall={}, neighbors are={:?}", i, grid.is_left_wall(i), grid.is_right_wall(i), grid.get_neighbors_indexes(i));
-  // }
-
+  // TODO: there's probably a 'lazier' way to do this,
+  // only doing the default work if a file isn't specified
+  let mut grid = Grid::with_dimensions(dimensions);
   grid.randomize_grid();
 
-  // get the randomized grid as base64
-  let encoded = grid.to_base64();
-  println!("encoded: {}", encoded);
+  if file.len() > 0 {
+    // try to read file
+
+    let b64_data = fs::read_to_string(file)
+      .expect("Something went wrong reading your file.");
+    grid = Grid::from_base64(&b64_data);
+  }
+
+  // TODO: register a handler to print the grid as base64 to stderr on signal
 
   let mut game = Conway::with_grid(grid);
   let t0 = Instant::now();
 
   loop {
+    if max_steps > 0 && game.steps == max_steps {
+      break;
+    }
+
     let elapsed = t0.elapsed().as_millis();
     let steps_per_sec = game.steps as f64 / (elapsed as f64 / 1000.);
     println!("{}", game.grid);

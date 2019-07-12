@@ -1,0 +1,29 @@
+name: conway-rust
+version: "0.1.0"
+author: Josh Delman <josh@turdnagel.com>
+about: simple conway's game of life simulator
+args:
+  - width:
+      short: w
+      long: width
+      value_name: WIDTH
+      help: set the width (default 32)
+      takes_value: true
+  - height:
+      short: h
+      long: height
+      value_name: HEIGHT
+      help: set the height (default 32)
+      takes_value: true
+  - file:
+      short: f
+      long: file
+      value_name: FILE
+      help: read a base64-encoded grid state from a file
+      takes_value: true
+  - steps:
+      short: s
+      long: steps
+      value_name: STEPS
+      help: if specified, stop running after a number of steps
+      takes_value: true
