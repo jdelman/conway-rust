@@ -41,7 +41,7 @@ impl Conway {
     for i in 0..self.grid.dimensions.area() {
       let is_cell_alive_in_next_gen = self.step_cell(i);
       if is_cell_alive_in_next_gen {
-        new_grid.assign_value(i, true);
+        new_grid.set_value(i, true);
       }
     }
 
