@@ -60,15 +60,15 @@ impl Grid {
     let mut rng = rand::thread_rng();
     for i in 0..self.dimensions.area() {
       if rng.gen() {
-        self.assign_value(i, true);
+        self.set_value(i, true);
       }
       else {
-        self.assign_value(i, false);
+        self.set_value(i, false);
       }
     }
   }
 
-  pub fn assign_value(&mut self, index: usize, value: bool) {
+  pub fn set_value(&mut self, index: usize, value: bool) {
     let segment = index / (8 * SEGMENT_SIZE);
     let offset = index % (8 * SEGMENT_SIZE);
 
