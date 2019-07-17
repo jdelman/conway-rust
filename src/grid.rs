@@ -180,16 +180,16 @@ impl Grid {
     // we pushed onto the array in order, from least
     // to most significant bits for each usize
     let iters = ((octets.len() - 2) / SEGMENT_SIZE) - 1;
-    let mut index = 0;
     for i in 0..iters {
-      // build up an array of SEGMENT_SIZE (8) octets
+      // build up an array of SEGMENT_SIZE (8) octets;
+      // we offset by 2 * SEGMENT_SIZE because
+      // the first two decoded values were the dimensions
       let start = (2 * SEGMENT_SIZE) + (i * SEGMENT_SIZE);
       let end = (2 * SEGMENT_SIZE) + (i * SEGMENT_SIZE) + SEGMENT_SIZE;
       let slice = &octets[start..end];
 
       let value = octets::from_octets(&slice);
-      new_grid.grid[index] = value;
-      index += 1;
+      new_grid.grid[i] = value;
     }
 
     new_grid
