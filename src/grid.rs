@@ -45,10 +45,12 @@ impl Grid {
 
   fn zero_grid(dimensions: &GridSize) -> Vec<usize> {
     // this isn't perfect, it won't work for boards smaller than (8 * usize) in area
-    let mut required_segments = dimensions.area() / 8 / SEGMENT_SIZE;
+    let area = dimensions.area();
+    let segment_bits = (8 * SEGMENT_SIZE);
+    let mut required_segments = area / segment_bits;
 
-    // if the area isn't a power of 2, add one, since integer devision will round down 
-    if !required_segments.is_power_of_two() {
+    // if the area isn't even divisible, add another segment 
+    if area % segment_bits != 0 {
       required_segments += 1;
     }
 
