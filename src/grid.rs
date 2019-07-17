@@ -194,6 +194,33 @@ impl Grid {
 
     new_grid
   }
+
+  pub fn from_grid_str(board: &str) -> Grid {
+    // consume once to get dimensions
+    let mut lines = board.lines();
+    let first_line = lines.next().unwrap();
+    let width = first_line.len() / 2;
+    let height = lines.count() + 1;
+
+    let dimensions = GridSize {
+      width,
+      height
+    };
+
+    let mut grid = Grid::with_dimensions(dimensions);
+
+    for (i, line) in board.lines().enumerate() {
+      // encode
+      for (c, chr) in line.chars().enumerate() {
+        let cell_value = if chr == '█' { true } else { false };
+        let cell_index = (i * width) + c;
+        println!("index={}, value={}", cell_index, cell_value);
+        grid.set_value(cell_index, cell_value);
+      }
+    }
+
+    grid
+  }
 }
 
 impl fmt::Display for Grid {
