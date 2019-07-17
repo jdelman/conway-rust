@@ -1,8 +1,6 @@
-use std::env;
-use std::sync::mpsc;
-use std::time::Instant;
-use std::thread;
 use std::fs;
+use std::time::Instant;
+use core::mem::size_of;
 
 #[macro_use]
 extern crate clap;
@@ -30,6 +28,7 @@ fn main() {
   let file = matches.value_of("file").unwrap_or("");
   let max_steps = matches.value_of("steps")
     .map_or(0, |val| val.parse::<usize>().unwrap());
+  let grid_file = matches.value_of("grid").unwrap_or("");
 
   let dimensions = GridSize {
     height,
@@ -47,6 +46,11 @@ fn main() {
     let b64_data = fs::read_to_string(file)
       .expect("Something went wrong reading your file.");
     grid = Grid::from_base64(&b64_data);
+  }
+  else if grid_file.len() > 0 {
+    let grid_data = fs::read_to_string(grid_file)
+      .expect("Something went wrong reading your grid file.");
+    grid = Grid::from_grid_str(&grid_data);
   }
 
   // TODO: register a handler to print the grid as base64 to stderr on signal

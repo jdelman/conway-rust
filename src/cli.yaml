@@ -27,3 +27,9 @@ args:
       value_name: STEPS
       help: if specified, stop running after a number of steps
       takes_value: true
+  - grid:
+      short: g
+      long: grid
+      value_name: GRID
+      help: read a printed grid from a file
+      takes_value: true
