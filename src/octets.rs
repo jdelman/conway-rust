@@ -1,6 +1,8 @@
-use std::mem::size_of;
+use crate::SEGMENT_SIZE;
 
-const SEGMENT_SIZE: usize = size_of::<usize>();
+// this module assumes that octets are little-endian,
+// i.e. the least significant bits will be the first
+// entries in an array of u8s
 
 pub fn to_octets(value: usize) -> Vec<u8> {
   let mut octets: Vec<u8> = Vec::with_capacity(SEGMENT_SIZE);
@@ -14,8 +16,6 @@ pub fn to_octets(value: usize) -> Vec<u8> {
 
     let octet = (value & bitmask) >> base;
     octets.push(octet as u8);
-
-    // println!("using bitmask={:b} with value={:b}, octet={:b}, shift={}", bitmask, value, octet, base);
   }
 
   octets

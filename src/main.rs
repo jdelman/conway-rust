@@ -8,9 +8,13 @@ use std::fs;
 extern crate clap;
 use clap::App;
 
+
 mod grid;
 mod conway;
 mod octets;
+
+pub const SEGMENT_SIZE: usize = size_of::<usize>();
+
 
 use grid::{Grid, GridSize};
 use conway::{Conway};

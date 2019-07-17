@@ -1,12 +1,10 @@
 use std::fmt;
-use std::mem::size_of;
 
 use base64;
 use rand::Rng;
 
 use crate::octets as octets;
-
-const SEGMENT_SIZE: usize = size_of::<usize>();
+use crate::SEGMENT_SIZE;
 
 #[derive(Debug, Copy, Clone)]
 pub struct GridSize {
