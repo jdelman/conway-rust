@@ -65,6 +65,7 @@ fn main() {
 
     let elapsed = t0.elapsed().as_millis();
     let steps_per_sec = game.steps as f64 / (elapsed as f64 / 1000.);
+    print!("{}[2J", 27 as char);
     println!("{}", game.grid);
     println!("steps: {}; elapsed: {}ms, steps/sec: {}", game.steps, elapsed, steps_per_sec);
     game.step();
