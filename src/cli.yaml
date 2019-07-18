@@ -33,3 +33,9 @@ args:
       value_name: GRID
       help: read a printed grid from a file
       takes_value: true
+  - delay:
+      short: d
+      long: delay
+      value_name: DELAY
+      help: add an abitrary delay between steps (provide in seconds)
+      takes_value: true

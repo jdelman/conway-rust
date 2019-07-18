@@ -1,5 +1,6 @@
 use std::fs;
-use std::time::Instant;
+use std::time::{Instant, Duration};
+use std::thread::sleep;
 use core::mem::size_of;
 
 #[macro_use]
@@ -29,6 +30,8 @@ fn main() {
   let max_steps = matches.value_of("steps")
     .map_or(0, |val| val.parse::<usize>().unwrap());
   let grid_file = matches.value_of("grid").unwrap_or("");
+  let delay = matches.value_of("delay")
+    .map_or(0, |val| val.parse::<u64>().unwrap());
 
   let dimensions = GridSize {
     height,
@@ -57,6 +60,7 @@ fn main() {
 
   let mut game = Conway::with_grid(grid);
   let t0 = Instant::now();
+  let delay_duration = Duration::from_millis(delay);
 
   loop {
     if max_steps > 0 && game.steps == max_steps {
@@ -69,5 +73,9 @@ fn main() {
     println!("{}", game.grid);
     println!("steps: {}; elapsed: {}ms, steps/sec: {}", game.steps, elapsed, steps_per_sec);
     game.step();
+
+    if (delay > 0) {
+      sleep(delay_duration);
+    }
   }
 }

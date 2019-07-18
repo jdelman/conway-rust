@@ -214,7 +214,6 @@ impl Grid {
       for (c, chr) in line.chars().enumerate() {
         let cell_value = if chr == '█' { true } else { false };
         let cell_index = (i * width) + c;
-        println!("index={}, value={}", cell_index, cell_value);
         grid.set_value(cell_index, cell_value);
       }
     }
